@@ -13,6 +13,7 @@ Note que temos duas classes: `Question` (que representa as questões do quiz) e 
 Explore também os cinco testes em [tests.py](https://github.com/andrehora/test-quiz/blob/main/tests.py) para entender melhor como o sistema funciona:
 Por exemplo:
 
+
 ```python
 def test_create_question():
     question = Question(title='q1')
