@@ -2,6 +2,22 @@ import pytest
 from model import Question
 
 
+@pytest.fixture
+def question_with_one_correct_choice():
+    question = Question('q1')
+    c1 = question.add_choice('c1', True)
+    c2 = question.add_choice('c2')
+    c3 = question.add_choice('c3')
+    return question, c1, c2, c3
+
+@pytest.fixture
+def question_with_two_correct_choices():
+    question = Question('q1',max_selections=2)
+    c1 = question.add_choice('c1', True)
+    c2 = question.add_choice('c2')
+    c3 = question.add_choice('c3')
+    return question, c1, c2, c3
+
 def test_create_question():
     question = Question(title='q1')
     assert question.id != None
@@ -133,3 +149,20 @@ def test_new_select_more_than_max_choices():
     
     with pytest.raises(Exception):
         new_question.correct_selected_choices([c1.id, c2.id])
+
+def test_fixture_set_correct_choices(question_with_one_correct_choice):
+    question, c1, c2, c3 = question_with_one_correct_choice
+
+    correct_choice = [c.id for c in question.choices if c.is_correct]
+
+    assert correct_choice == [c1.id]
+
+def test_fixture_set_one_more_correct_choice(question_with_two_correct_choices):
+    question, c1, c2, c3 = question_with_two_correct_choices
+
+    question.set_correct_choices([c2.id])
+
+    result = question.correct_selected_choices([c1.id, c2.id])
+
+    # só c1 é correto
+    assert result == [c1.id, c2.id]
